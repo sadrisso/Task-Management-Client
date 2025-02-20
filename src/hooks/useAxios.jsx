@@ -4,7 +4,7 @@ import React from 'react';
 
 const useAxios = () => {
     const axiosInstance = axios.create({
-        baseURL: 'http://localhost:4000/',
+        baseURL: 'https://task-management-server-woad-six.vercel.app/',
     });
 
     return axiosInstance

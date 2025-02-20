@@ -1,8 +1,18 @@
-# React + Vite
+### Description
+- This is a Task Management Application built with React, Tailwind CSS, and Axios for API communication. It allows users to add, edit, delete, and reorder tasks using a drag-and-drop interface. Tasks are categorized into three sections: To-Do, In Progress, and Done. All changes are instantly saved to the database to ensure data persistence.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+### Live links
+- https://willowy-macaron-809150.netlify.app/
+- https://task-management-server-woad-six.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+### Dependencies
+-
+
+
+### Installation steps
+-
+
+### Technology Used
+- react.js, express.js, mongoDB, node.js, tailwindcss

@@ -68,21 +68,14 @@ const SideBar = () => {
 
                     {/* Navigation Links */}
                     <nav className="mt-5 space-y-3">
-                        <Link
-                            onClick={toggleSidebar}
-                            to="/dashboard"
-                            className="block p-2 hover:bg-gray-700 rounded"
-                        >
-                            Dashboard
+                        <Link onClick={toggleSidebar} to="/" className="block p-2 hover:bg-gray-700 rounded">
+                            Home
                         </Link>
                         <Link onClick={toggleSidebar} to="/addTask" className="block p-2 hover:bg-gray-700 rounded">
                             Add Task
                         </Link>
                         <Link onClick={toggleSidebar} to="/tasks" className="block p-2 hover:bg-gray-700 rounded">
                             My Task
-                        </Link>
-                        <Link onClick={toggleSidebar} to="/" className="block p-2 hover:bg-gray-700 rounded">
-                            Profile
                         </Link>
                         <Link onClick={toggleSidebar} to="/" className="block p-2 hover:bg-gray-700 rounded">
                             Notifications
