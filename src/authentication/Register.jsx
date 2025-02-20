@@ -1,11 +1,33 @@
 /* eslint-disable no-unused-vars */
 import Lottie from 'lottie-react';
 import register from "../../public/registrationLottie.json"
-import React from 'react';
+import React, { use, useState } from 'react';
 import { Link } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 
 const Register = () => {
 
+    const { createUser } = useAuth()
+    const [loading, setLoading] = useState(true)
+
+    const handleSubmit = e => {
+        e.preventDefault()
+
+        const form = e.target
+        const name = form.name.value;
+        const email = form.email.value;
+        const password = form.password.value;
+
+
+        createUser(email, password)
+            .then((user) => {
+                console.log("New user registered --> ", user?.user)
+                setLoading(false)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
     return (
         <div>
@@ -15,24 +37,39 @@ const Register = () => {
                         <Lottie animationData={register} loop={true} className='text-2xl' />;
                     </div>
                     <div className="card bg-white w-full max-w-sm shrink-0 shadow-2xl">
-                        <form className="card-body">
+                        <form onSubmit={handleSubmit} className="card-body">
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Name</span>
                                 </label>
-                                <input type="text" placeholder="name" className="input input-bordered" required />
+                                <input
+                                    name='name'
+                                    type="text"
+                                    placeholder="name"
+                                    className="input input-bordered"
+                                    required />
                             </div>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Email</span>
                                 </label>
-                                <input type="email" placeholder="email" className="input input-bordered" required />
+                                <input
+                                    name='email'
+                                    type="email"
+                                    placeholder="email"
+                                    className="input input-bordered"
+                                    required />
                             </div>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
-                                <input type="password" placeholder="password" className="input input-bordered" required />
+                                <input
+                                    name='password'
+                                    type="password"
+                                    placeholder="password"
+                                    className="input input-bordered"
+                                    required />
                             </div>
                             <div className="form-control mt-6">
                                 <button className="btn btn-primary">Register</button>

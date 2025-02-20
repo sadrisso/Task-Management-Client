@@ -1,12 +1,32 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState } from 'react';
 import login from "../../public/loginLottie.json"
 import Lottie from 'lottie-react';
 import { Link } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 
 const Login = () => {
 
+    const { loginUser } = useAuth()
+    const [loading, setLoading] = useState(true)
 
+    const handleSubmit = e => {
+        e.preventDefault()
+
+        const form = e.target
+        const email = form.email.value;
+        const password = form.password.value;
+
+
+        loginUser(email, password)
+            .then((user) => {
+                console.log("New user login --> ", user?.user)
+                setLoading(false)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
     return (
         <div>
@@ -16,18 +36,18 @@ const Login = () => {
                         <Lottie animationData={login} loop={true} />;
                     </div>
                     <div className="card bg-white w-full max-w-sm shrink-0 shadow-2xl">
-                        <form className="card-body">
+                        <form onSubmit={handleSubmit} className="card-body">
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Email</span>
                                 </label>
-                                <input type="email" placeholder="email" className="input input-bordered" required />
+                                <input name='email' type="email" placeholder="email" className="input input-bordered" required />
                             </div>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
-                                <input type="password" placeholder="password" className="input input-bordered" required />
+                                <input name='password' type="password" placeholder="password" className="input input-bordered" required />
                                 <label className="label">
                                     <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                                 </label>
