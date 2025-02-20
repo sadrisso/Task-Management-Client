@@ -1,127 +1,46 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
-import useAuth from '../hooks/useAuth';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
 
-
-
     return (
-        <div className="min-h-screen bg-gray-100 p-6">
-            {/* Header */}
-            <header className="text-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-800">Task Management App</h1>
-                <p className="text-gray-600">Stay organized and productive</p>
-            </header>
-
-            {/* Add Task Section */}
-            <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                <div className="flex gap-4">
-                    <input
-                        type="text"
-                        placeholder="Add a new task..."
-                        className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        disabled // Disabled for static design
-                    />
-                    <button
-                        className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        disabled
-                    >
-                        Add Task
-                    </button>
+        <div className="flex flex-col min-h-screen bg-gray-100 p-4 md:p-10">
+            <div className="flex flex-col md:flex-row mt-5 md:ml-52">
+                <label className="input input-bordered flex items-center gap-2">
+                    <input type="text" className="grow" placeholder="Search" />
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 16 16"
+                        fill="currentColor"
+                        className="h-4 w-4 opacity-70">
+                        <path
+                            fillRule="evenodd"
+                            d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                            clipRule="evenodd" />
+                    </svg>
+                </label>
+                <div>
+                    <Link to="/addTask" className="btn">Add </Link>
+                    <Link to="/tasks" className="btn">All Tasks </Link>
                 </div>
             </div>
-
-            {/* Filter Buttons */}
-            <div className="flex gap-4 mb-6">
-                <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    All
-                </button>
-                <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                    Active
-                </button>
-                <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                    Completed
-                </button>
-            </div>
-
-            {/* Task List */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-                <ul className="space-y-4">
-                    {/* Task Item 1 */}
-                    <li className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                        <div className="flex items-center space-x-4">
-                            <input
-                                type="checkbox"
-                                className="w-5 h-5 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
-                                disabled
-                            />
-                            <span className="text-gray-800">Complete project proposal</span>
-                        </div>
-                        <button
-                            className="text-red-500 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                            disabled
-                        >
-                            Delete
-                        </button>
-                    </li>
-
-                    {/* Task Item 2 */}
-                    <li className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                        <div className="flex items-center space-x-4">
-                            <input
-                                type="checkbox"
-                                className="w-5 h-5 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
-                                checked
-                                disabled
-                            />
-                            <span className="text-gray-800 line-through">
-                                Schedule team meeting
-                            </span>
-                        </div>
-                        <button
-                            className="text-red-500 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                            disabled
-                        >
-                            Delete
-                        </button>
-                    </li>
-
-                    {/* Task Item 3 */}
-                    <li className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                        <div className="flex items-center space-x-4">
-                            <input
-                                type="checkbox"
-                                className="w-5 h-5 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
-                                disabled
-                            />
-                            <span className="text-gray-800">Review client feedback</span>
-                        </div>
-                        <button
-                            className="text-red-500 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                            disabled
-                        >
-                            Delete
-                        </button>
-                    </li>
-                </ul>
+            <div className="mt-6 md:mt-10 grid grid-cols-1 md:grid-cols-4 gap-4 md:ml-52">
+                <div className="border">
+                    <h1 className="text-2xl">ToDo</h1>
+                </div>
+                <div className="border">
+                    <h1 className="text-2xl">In Progress</h1>
+                </div>
+                <div className="border">
+                    <h1 className="text-2xl">Completed</h1>
+                </div>
+                <div className="border">
+                    <h1 className="text-2xl">Rejected</h1>
+                </div>
             </div>
         </div>
-
     );
 };
 
 export default Home;
-
-
-
-
-
-{/* <div className='flex flex-col md:flex-row'>
-    <div className='h-[200px] md:min-h-[calc(100vh-120px)] bg-[#1D232A] text-white md:w-[300px]'>
-        left
-    </div>
-    <div className='h-[500px] md:min-h-[calc(100vh-120px)] bg-base-200 md:w-[1563px]'>
-        right
-    </div>
-</div> */}

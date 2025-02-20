@@ -2,7 +2,7 @@
 import Lottie from 'lottie-react';
 import register from "../../public/registrationLottie.json"
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import { FcGoogle } from 'react-icons/fc';
 import { SiGnuprivacyguard } from 'react-icons/si';
@@ -13,6 +13,7 @@ const googleProvider = new GoogleAuthProvider()
 const Register = () => {
 
     const { createUser, googleLogin } = useAuth()
+    const navigate = useNavigate()
 
     const handleSubmit = e => {
         e.preventDefault()
@@ -26,6 +27,7 @@ const Register = () => {
         createUser(email, password)
             .then((user) => {
                 console.log("New user registered --> ", user?.user)
+                navigate("/")
             })
             .catch((err) => {
                 console.log(err)
@@ -37,6 +39,7 @@ const Register = () => {
         googleLogin(googleProvider)
             .then((res) => {
                 console.log(res)
+                navigate("/")
             })
             .catch((error) => {
                 console.log(error)
@@ -45,7 +48,7 @@ const Register = () => {
 
     return (
         <div>
-            <div className="hero min-h-[calc(100vh-120px)]">
+            <div className="hero min-h-[calc(100vh-120px)] mx-auto">
                 <div className="hero-content flex-col lg:flex-row-reverse">
                     <div className="text-center lg:text-left text-2xl">
                         <Lottie animationData={register} loop={true} className='text-2xl' />;
@@ -85,9 +88,9 @@ const Register = () => {
                                     className="input input-bordered"
                                     required />
                             </div>
-                            <div className="form-control mt-6">
+                            <div className="form-control mt-6 flex gap-2">
                                 <button className="btn"><SiGnuprivacyguard />Register</button>
-                                <button onClick={handleGoogleLogin} className='btn ml-1'><FcGoogle className='text-2xl' />Google</button>
+                                <button onClick={handleGoogleLogin} className='btn md:ml-1'><FcGoogle className='text-2xl' />Google</button>
                             </div>
                         </form>
                         <Link className='text-center py-3 text-gray-500 hover:text-gray-600' to="/login">have an account? login</Link>
