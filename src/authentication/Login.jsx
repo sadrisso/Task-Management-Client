@@ -4,11 +4,15 @@ import login from "../../public/loginLottie.json"
 import Lottie from 'lottie-react';
 import { Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
+import { FcGoogle } from 'react-icons/fc';
+import { CiLogin } from 'react-icons/ci';
+import { GoogleAuthProvider } from 'firebase/auth';
+
+const googleProvider = new GoogleAuthProvider()
 
 const Login = () => {
 
-    const { loginUser } = useAuth()
-    const [loading, setLoading] = useState(true)
+    const { loginUser, loading, googleLogin } = useAuth()
 
     const handleSubmit = e => {
         e.preventDefault()
@@ -21,10 +25,19 @@ const Login = () => {
         loginUser(email, password)
             .then((user) => {
                 console.log("New user login --> ", user?.user)
-                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
+            })
+    }
+
+    const handleGoogleLogin = () => {
+        googleLogin(googleProvider)
+            .then((res) => {
+                console.log(res)
+            })
+            .catch((error) => {
+                console.log(error)
             })
     }
 
@@ -53,10 +66,11 @@ const Login = () => {
                                 </label>
                             </div>
                             <div className="form-control mt-6">
-                                <button className="btn btn-primary">Login</button>
+                                <button className="btn"><CiLogin className='text-2xl' />Login</button>
+                                <button onClick={handleGoogleLogin} className='btn ml-1'><FcGoogle className='text-2xl' />Google</button>
                             </div>
                         </form>
-                        <Link className='text-center text-gray-500 hover:text-gray-600' to="/register">new here? register</Link>
+                        <Link className='text-center py-3 text-gray-500 hover:text-gray-600' to="/register">new here? register</Link>
                     </div>
                 </div>
             </div>

@@ -1,14 +1,18 @@
 /* eslint-disable no-unused-vars */
 import Lottie from 'lottie-react';
 import register from "../../public/registrationLottie.json"
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
+import { FcGoogle } from 'react-icons/fc';
+import { SiGnuprivacyguard } from 'react-icons/si';
+import { GoogleAuthProvider } from 'firebase/auth';
+
+const googleProvider = new GoogleAuthProvider()
 
 const Register = () => {
 
-    const { createUser } = useAuth()
-    const [loading, setLoading] = useState(true)
+    const { createUser, googleLogin } = useAuth()
 
     const handleSubmit = e => {
         e.preventDefault()
@@ -22,10 +26,20 @@ const Register = () => {
         createUser(email, password)
             .then((user) => {
                 console.log("New user registered --> ", user?.user)
-                setLoading(false)
             })
             .catch((err) => {
                 console.log(err)
+            })
+    }
+
+
+    const handleGoogleLogin = () => {
+        googleLogin(googleProvider)
+            .then((res) => {
+                console.log(res)
+            })
+            .catch((error) => {
+                console.log(error)
             })
     }
 
@@ -72,10 +86,11 @@ const Register = () => {
                                     required />
                             </div>
                             <div className="form-control mt-6">
-                                <button className="btn btn-primary">Register</button>
+                                <button className="btn"><SiGnuprivacyguard />Register</button>
+                                <button onClick={handleGoogleLogin} className='btn ml-1'><FcGoogle className='text-2xl' />Google</button>
                             </div>
                         </form>
-                        <Link className='text-center text-gray-500 hover:text-gray-600' to="/login">have an account? login</Link>
+                        <Link className='text-center py-3 text-gray-500 hover:text-gray-600' to="/login">have an account? login</Link>
                     </div>
                 </div>
             </div>

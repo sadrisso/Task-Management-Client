@@ -1,8 +1,24 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { Link } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase/firebase.init';
 
 const Navbar = () => {
+
+    const { user } = useAuth()
+
+    const handleSignOut = () => {
+        signOut(auth)
+            .then(() => {
+                console.log('sign out successfully')
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
     return (
         <div>
             <div className="navbar bg-base-100">
@@ -54,7 +70,10 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <Link to="/login" className="btn">Login/Register</Link>
+                    {
+                        user ? <button onClick={handleSignOut} className='btn'>SignOut</button>
+                            : <Link to="/login" className="btn">Login/Register</Link>
+                    }
                 </div>
             </div>
         </div>
