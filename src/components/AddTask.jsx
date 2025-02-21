@@ -2,10 +2,12 @@
 import React from 'react';
 import useAxios from '../hooks/useAxios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const AddTask = () => {
 
     const axiosInstance = useAxios()
+    const navigate = useNavigate()
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -23,6 +25,7 @@ const AddTask = () => {
             .then((res) => {
                 if (res?.data?.insertedId) {
                     toast.success("Task Added")
+                    navigate("/")
                 }
                 console.log(res?.data)
             })

@@ -6,6 +6,7 @@ import useAxios from "../hooks/useAxios";
 import { toast } from "react-toastify";
 import { FaPen, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { FcViewDetails } from "react-icons/fc";
 
 const Home = () => {
     const axiosInstance = useAxios();
@@ -13,6 +14,7 @@ const Home = () => {
     const [inProgress, setInProgress] = useState([]);
     const [done, setDone] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(true)
     const [editingTask, setEditingTask] = useState(null); // Track the task being edited
 
     // Fetch tasks for each category
@@ -22,15 +24,24 @@ const Home = () => {
 
     const fetchTasks = () => {
         axiosInstance.get("todo?category=To Do")
-            .then(res => setTodo(res?.data))
+            .then(res => {
+                setTodo(res?.data)
+                setLoading(false)
+            })
             .catch(error => console.error("Error fetching To Do tasks:", error));
 
         axiosInstance.get("inProgress?category=In Progress")
-            .then(res => setInProgress(res?.data))
+            .then(res => {
+                setInProgress(res?.data)
+                setLoading(false)
+            })
             .catch(error => console.error("Error fetching In Progress tasks:", error));
 
         axiosInstance.get("done?category=Done")
-            .then(res => setDone(res?.data))
+            .then(res => {
+                setDone(res?.data)
+                setLoading(false)
+            })
             .catch(error => console.error("Error fetching Done tasks:", error));
     };
 
@@ -115,118 +126,136 @@ const Home = () => {
 
     return (
         <div className="mt-10 md:ml-52 min-h-screen bg-gray-100 p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row gap-4">
-                {/* To Do Column */}
-                <div className="bg-gray-200 rounded-lg p-4 w-full sm:w-72">
-                    <h2 className="text-lg font-semibold mb-4">To Do</h2>
-                    <div className="space-y-2">
-                        {todo?.map((item, i) => (
-                            <ul key={i}>
-                                <div className="bg-white rounded-lg p-3 shadow-sm">
-                                    <h2>{item?.title}</h2>
-                                    <p className="text-xs text-gray-500">{item?.description}</p>
-                                    <p className="text-xs text-gray-500">{item?.category}</p>
-                                    <p className="text-xs text-gray-500">{item?.timestamp}</p>
-                                    <div className="space-x-1.5 text-right">
-                                        <button
-                                            onClick={() => handleDelete(item._id, item.category)}
-                                            className="hover:text-red-500"
-                                        >
-                                            <FaTrash />
-                                        </button>
-                                        <button
-                                            onClick={() => handleEdit(item)}
-                                            className="hover:text-blue-500"
-                                        >
-                                            <FaPen />
-                                        </button>
-                                    </div>
-                                </div>
-                            </ul>
-                        ))}
-                    </div>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="mt-4 w-full text-gray-600 hover:text-gray-800"
-                    >
-                        + Add a task
-                    </button>
-                </div>
+            {
+                loading ?
+                    <div className="text-3xl text-center"><span className="loading loading-spinner loading-xl"></span></div>
+                    :
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        {/* To Do Column */}
 
-                {/* In Progress Column */}
-                <div className="bg-gray-200 rounded-lg p-4 w-full sm:w-72">
-                    <h2 className="text-lg font-semibold mb-4">In Progress</h2>
-                    <div className="space-y-2">
-                        {inProgress.map((item, i) => (
-                            <ul key={i}>
-                                <div className="bg-white rounded-lg p-3 shadow-sm">
-                                    <h2>{item?.title}</h2>
-                                    <p className="text-xs text-gray-500">{item?.description}</p>
-                                    <p className="text-xs text-gray-500">{item?.category}</p>
-                                    <p className="text-xs text-gray-500">{item?.timestamp}</p>
-                                    <div className="space-x-1.5 text-right">
-                                        <button
-                                            onClick={() => handleDelete(item._id, item.category)}
-                                            className="hover:text-red-500"
-                                        >
-                                            <FaTrash />
-                                        </button>
-                                        <button
-                                            onClick={() => handleEdit(item)}
-                                            className="hover:text-blue-500"
-                                        >
-                                            <FaPen />
-                                        </button>
-                                    </div>
-                                </div>
-                            </ul>
-                        ))}
-                    </div>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="mt-4 w-full text-gray-600 hover:text-gray-800"
-                    >
-                        + Add a task
-                    </button>
-                </div>
+                        <div className="bg-gray-200 rounded-lg p-4 w-full sm:w-72">
+                            <h2 className="text-lg font-semibold mb-4">To Do</h2>
+                            <div className="space-y-2">
+                                {todo?.map((item, i) => (
+                                    <ul key={i}>
+                                        <Link to={`task/${item?._id}`} className="hover:text-red-400">
+                                            <div className="bg-white rounded-lg p-3 shadow-sm">
+                                                <h2>{item?.title}</h2>
+                                                <p className="text-xs text-gray-500">{item?.description}</p>
+                                                <p className="text-xs text-gray-500">{item?.category}</p>
+                                                <p className="text-xs text-gray-500">{item?.timestamp}</p>
+                                                <div className="space-x-1.5 text-right">
+                                                    <button
+                                                        onClick={() => handleDelete(item._id, item.category)}
+                                                        className="hover:text-red-500"
+                                                    >
+                                                        <FaTrash />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleEdit(item)}
+                                                        className="hover:text-blue-500"
+                                                    >
+                                                        <FaPen />
+                                                    </button>
 
-                {/* Done Column */}
-                <div className="bg-gray-200 rounded-lg p-4 w-full sm:w-72">
-                    <h2 className="text-lg font-semibold mb-4">Done</h2>
-                    <div className="space-y-2">
-                        {done.map((item, i) => (
-                            <ul key={i}>
-                                <div className="bg-white rounded-lg p-3 shadow-sm">
-                                    <h2>{item?.title}</h2>
-                                    <p className="text-xs text-gray-500">{item?.description}</p>
-                                    <p className="text-xs text-gray-500">{item?.category}</p>
-                                    <p className="text-xs text-gray-500">{item?.timestamp}</p>
-                                    <div className="space-x-1.5 text-right">
-                                        <button
-                                            onClick={() => handleDelete(item._id, item.category)}
-                                            className="hover:text-red-500"
-                                        >
-                                            <FaTrash />
-                                        </button>
-                                        <button
-                                            onClick={() => handleEdit(item)}
-                                            className="hover:text-blue-500"
-                                        >
-                                            <FaPen />
-                                        </button>
-                                    </div>
-                                </div>
-                            </ul>
-                        ))}
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </ul>
+                                ))}
+                            </div>
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="mt-4 w-full text-gray-600 hover:text-gray-800"
+                            >
+                                + Add a task
+                            </button>
+                        </div>
+
+
+                        {/* In Progress Column */}
+
+                        <div className="bg-gray-200 rounded-lg p-4 w-full sm:w-72">
+                            <h2 className="text-lg font-semibold mb-4">In Progress</h2>
+                            <div className="space-y-2">
+                                {inProgress.map((item, i) => (
+                                    <ul key={i}>
+                                        <Link to={`task/${item?._id}`} className="hover:text-red-400">
+                                            <div className="bg-white rounded-lg p-3 shadow-sm">
+                                                <h2>{item?.title}</h2>
+                                                <p className="text-xs text-gray-500">{item?.description}</p>
+                                                <p className="text-xs text-gray-500">{item?.category}</p>
+                                                <p className="text-xs text-gray-500">{item?.timestamp}</p>
+                                                <div className="space-x-1.5 text-right">
+                                                    <button
+                                                        onClick={() => handleDelete(item._id, item.category)}
+                                                        className="hover:text-red-500"
+                                                    >
+                                                        <FaTrash />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleEdit(item)}
+                                                        className="hover:text-blue-500"
+                                                    >
+                                                        <FaPen />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </ul>
+                                ))}
+                            </div>
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="mt-4 w-full text-gray-600 hover:text-gray-800"
+                            >
+                                + Add a task
+                            </button>
+                        </div>
+
+
+                        {/* Done Column */}
+
+                        <div className="bg-gray-200 rounded-lg p-4 w-full sm:w-72">
+                            <h2 className="text-lg font-semibold mb-4">Done</h2>
+                            <div className="space-y-2">
+                                {done.map((item, i) => (
+                                    <ul key={i}>
+                                        <Link to={`task/${item?._id}`} className="hover:text-red-400">
+                                            <div className="bg-white rounded-lg p-3 shadow-sm">
+                                                <h2>{item?.title}</h2>
+                                                <p className="text-xs text-gray-500">{item?.description}</p>
+                                                <p className="text-xs text-gray-500">{item?.category}</p>
+                                                <p className="text-xs text-gray-500">{item?.timestamp}</p>
+                                                <div className="space-x-1.5 text-right">
+                                                    <button
+                                                        onClick={() => handleDelete(item._id, item.category)}
+                                                        className="hover:text-red-500"
+                                                    >
+                                                        <FaTrash />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleEdit(item)}
+                                                        className="hover:text-blue-500"
+                                                    >
+                                                        <FaPen />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </ul>
+                                ))}
+                            </div>
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="mt-4 w-full text-gray-600 hover:text-gray-800"
+                            >
+                                + Add a task
+                            </button>
+                        </div>
+
                     </div>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="mt-4 w-full text-gray-600 hover:text-gray-800"
-                    >
-                        + Add a task
-                    </button>
-                </div>
-            </div>
+            }
 
             {/* Modal for adding/editing a new task */}
             {isModalOpen && (
@@ -295,3 +324,4 @@ const Home = () => {
 };
 
 export default Home;
+

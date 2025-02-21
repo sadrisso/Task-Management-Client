@@ -8,6 +8,7 @@ import Register from "../authentication/Register";
 import Dashboard from "../components/Dashboard";
 import MyTasks from "../components/MyTasks";
 import AddTask from "../components/AddTask";
+import TaskDetails from "../components/TaskDetails";
 
 
 export const router = createBrowserRouter([
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
                     {
                         path: "/addTask",
                         element: <AddTask />
+                    },
+                    {
+                        path: "/task/:id",
+                        element: <TaskDetails />
                     }
                 ]
             },
