@@ -71,14 +71,14 @@ const SideBar = () => {
                         <Link onClick={toggleSidebar} to="/" className="block p-2 hover:bg-gray-700 rounded">
                             Home
                         </Link>
+                        <Link onClick={toggleSidebar} to="/tasks" className="block p-2 hover:bg-gray-700 rounded">
+                            Tasks
+                        </Link>
                         <Link onClick={toggleSidebar} to="/addTask" className="block p-2 hover:bg-gray-700 rounded">
                             Add Task
                         </Link>
-                        <Link onClick={toggleSidebar} to="/tasks" className="block p-2 hover:bg-gray-700 rounded">
+                        <Link onClick={toggleSidebar} to="/allTasks" className="block p-2 hover:bg-gray-700 rounded">
                             My Task
-                        </Link>
-                        <Link onClick={toggleSidebar} to="/" className="block p-2 hover:bg-gray-700 rounded">
-                            Notifications
                         </Link>
                         {user ? (
                             <Link
