@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 import { toast } from "react-toastify";
@@ -11,6 +12,13 @@ import { useQuery } from "@tanstack/react-query";
 import { MdDoneOutline } from "react-icons/md";
 import { RiProgress5Line } from "react-icons/ri";
 import { FaArrowsTurnToDots } from "react-icons/fa6";
+import moment from "moment";
+
+import { DndContext, useDrag } from 'react-dnd'
+import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { closestCenter } from "@dnd-kit/core";
+
+
 
 const Home = () => {
     const axiosInstance = useAxios();
@@ -42,6 +50,9 @@ const Home = () => {
     });
 
     const isLoading = todoIsPending || inProgressIsPending || doneIsPending;
+    const refetchAll = async () => {
+        await Promise.all([refetchTodos(), refetchInprogress(), refetchDones()]);
+    };
 
     // Handle form submission (for both add and edit)
     const handleSubmit = (e) => {
@@ -61,9 +72,7 @@ const Home = () => {
                 .then((res) => {
                     if (res?.data?.modifiedCount) {
                         toast.success("Task Updated");
-                        refetchDones();
-                        refetchTodos();
-                        refetchInprogress();
+                        refetchAll()
                     }
                 })
                 .catch((error) => {
@@ -76,9 +85,7 @@ const Home = () => {
                 .then((res) => {
                     if (res?.data?.insertedId) {
                         toast.success("Task Added");
-                        refetchDones();
-                        refetchTodos();
-                        refetchInprogress();
+                        refetchAll()
                     }
                 })
                 .catch((error) => {
@@ -109,9 +116,7 @@ const Home = () => {
                     .then((res) => {
                         if (res?.data?.deletedCount) {
                             toast.success("Task Deleted");
-                            refetchDones();
-                            refetchTodos();
-                            refetchInprogress();
+                            refetchAll()
                         }
                     })
                     .catch((error) => {
@@ -128,6 +133,48 @@ const Home = () => {
         setIsModalOpen(true); // Open the modal
     };
 
+    const handleDragEnd = (e) => {
+        console.log(e)
+    }
+
+    const SortableTask = ({ item }) => {
+        const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item._id });
+
+        const style = {
+            // transform: CSS.Transform.toString(transform),
+            transition,
+            padding: "10px",
+            margin: "5px",
+            backgroundColor: "#4A90E2",
+            color: "white",
+            textAlign: "center",
+            borderRadius: "5px",
+            cursor: "grab",
+        };
+
+        return (
+            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+                <div className="bg-white rounded-lg p-3 shadow-sm">
+                    <h2>{item?.title}</h2>
+                    <p className="text-xs text-gray-500">{item?.description}</p>
+                    <p className="text-xs text-gray-500">{item?.category}</p>
+                    <p className="text-xs text-gray-500">
+                        {moment(item?.timestamp).startOf('hour').fromNow()}
+                    </p>
+                    <div className="space-x-1.5 text-right">
+                        <button onClick={() => handleDelete(item._id)} className="hover:text-red-500">
+                            <FaTrash />
+                        </button>
+                        <button onClick={() => handleEdit(item)} className="hover:text-blue-500">
+                            <FaPen />
+                        </button>
+                        <Link to={`/task/${item?._id}`}><TbListDetails /></Link>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div className="min-h-screen bg-gray-100 mt-5 md:mt-12 md:ml-60 overflow-hidden">
             {/* Loading State */}
@@ -140,8 +187,8 @@ const Home = () => {
                     {/* Stats and Task Columns */}
                     <div className="">
                         {/* Stats Section */}
-                        <div className="stats stats-horizontal shadow w-full my-3">
-                            <div className="stat">
+                        <div className="stats stats-horizontal shadow w-full my-3 space-x-1">
+                            <div className="stat bg-white">
                                 <div className="stat-figure text-blue-500">
                                     <FaArrowsTurnToDots className="text-2xl" />
                                 </div>
@@ -149,7 +196,7 @@ const Home = () => {
                                 <div className="stat-value">{todo?.length}</div>
                             </div>
 
-                            <div className="stat">
+                            <div className="stat bg-white">
                                 <div className="stat-figure text-yellow-500">
                                     <RiProgress5Line className="text-2xl" />
                                 </div>
@@ -157,7 +204,7 @@ const Home = () => {
                                 <div className="stat-value">{inProgress?.length}</div>
                             </div>
 
-                            <div className="stat">
+                            <div className="stat bg-white">
                                 <div className="stat-figure text-green-500">
                                     <MdDoneOutline className="text-2xl" />
                                 </div>
@@ -171,31 +218,14 @@ const Home = () => {
                             {/* To Do Column */}
                             <div className="bg-gray-200 rounded-lg p-4">
                                 <h2 className="text-lg font-semibold mb-4">To Do</h2>
-                                <div className="space-y-2">
-                                    {todo?.map((item, i) => (
-                                        <div key={i} className="bg-white rounded-lg p-3 shadow-sm">
-                                            <h2>{item?.title}</h2>
-                                            <p className="text-xs text-gray-500">{item?.description}</p>
-                                            <p className="text-xs text-gray-500">{item?.category}</p>
-                                            <p className="text-xs text-gray-500">{item?.timestamp}</p>
-                                            <div className="space-x-1.5 text-right">
-                                                <button
-                                                    onClick={() => handleDelete(item._id)}
-                                                    className="hover:text-red-500"
-                                                >
-                                                    <FaTrash />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleEdit(item)}
-                                                    className="hover:text-blue-500"
-                                                >
-                                                    <FaPen />
-                                                </button>
-                                                <Link to={`task/${item?._id}`}><TbListDetails /></Link>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                                    <SortableContext items={todo} strategy={verticalListSortingStrategy}>
+                                        {todo.map((item) => (
+                                            <SortableTask key={item._id} item={item} />
+                                        ))}
+                                    </SortableContext>
+                                </DndContext>
+
                                 <button
                                     onClick={() => setIsModalOpen(true)}
                                     className="mt-4 w-full text-gray-600 hover:text-gray-800"
@@ -213,7 +243,9 @@ const Home = () => {
                                             <h2>{item?.title}</h2>
                                             <p className="text-xs text-gray-500">{item?.description}</p>
                                             <p className="text-xs text-gray-500">{item?.category}</p>
-                                            <p className="text-xs text-gray-500">{item?.timestamp}</p>
+                                            <p className="text-xs text-gray-500">
+                                                {moment(item?.timestamp).startOf('hour').fromNow()}
+                                            </p>
                                             <div className="space-x-1.5 text-right">
                                                 <button
                                                     onClick={() => handleDelete(item._id)}
@@ -227,7 +259,7 @@ const Home = () => {
                                                 >
                                                     <FaPen />
                                                 </button>
-                                                <Link to={`task/${item?._id}`}><TbListDetails /></Link>
+                                                <Link to={`/task/${item?._id}`}><TbListDetails /></Link>
                                             </div>
                                         </div>
                                     ))}
@@ -249,7 +281,9 @@ const Home = () => {
                                             <h2>{item?.title}</h2>
                                             <p className="text-xs text-gray-500">{item?.description}</p>
                                             <p className="text-xs text-gray-500">{item?.category}</p>
-                                            <p className="text-xs text-gray-500">{item?.timestamp}</p>
+                                            <p className="text-xs text-gray-500">
+                                                {moment(item?.timestamp).startOf('hour').fromNow()}
+                                            </p>
                                             <div className="space-x-1.5 text-right">
                                                 <button
                                                     onClick={() => handleDelete(item._id)}
@@ -263,7 +297,7 @@ const Home = () => {
                                                 >
                                                     <FaPen />
                                                 </button>
-                                                <Link to={`task/${item?._id}`}><TbListDetails /></Link>
+                                                <Link to={`/task/${item?._id}`}><TbListDetails /></Link>
                                             </div>
                                         </div>
                                     ))}

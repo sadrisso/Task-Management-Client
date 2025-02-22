@@ -11,6 +11,7 @@ import AddTask from "../components/AddTask";
 import TaskDetails from "../components/TaskDetails";
 import DashboardDetails from "../components/DashboardDetails";
 import PrivateRoute from "./PrivateRoute";
+import DragAndDrop from "../components/DragAndDrop";
 
 
 export const router = createBrowserRouter([
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
                 children: [
                     {
                         path: "/",
-                        element: <DashboardDetails />
+                        element: <DragAndDrop />
                     },
                     {
                         path: "/tasks",

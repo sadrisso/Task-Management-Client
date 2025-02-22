@@ -6,6 +6,7 @@ import { GiProgression } from 'react-icons/gi';
 import { IoCheckmarkDoneCircle } from 'react-icons/io5';
 import useAxios from '../hooks/useAxios';
 import { FaCheckCircle, FaPlus, FaSpinner, FaTasks } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const DashboardDetails = () => {
 
@@ -120,9 +121,9 @@ const DashboardDetails = () => {
             </div>
 
             {/* Add Task Button */}
-            <button className="fixed bottom-6 right-6 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-all">
+            <Link to="/addTask" className="fixed bottom-6 right-6 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-all">
                 <FaPlus className="text-2xl" />
-            </button>
+            </Link>
         </div >
     );
 };
